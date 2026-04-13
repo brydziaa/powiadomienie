@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚠️ Powiadomienie ⚠️</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+
+    /* czerwony gradient */
+    background: linear-gradient(135deg, #808080, #D3D3D3);
+}
+
+#wrapper {
+    width: min(90vw, 520px);
+}
+
+#header {
+    width: 100%;
+    background: #007BFF;
+    color: white;
+    text-align: center;
+    padding: 12px;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 15px 15px 0 0;
+}
+
+#container {
+    background: #ffffff;
+    border-radius: 0 0 25px 25px;
+    padding: 50px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+h1 {
+    font-size: 1.3rem;
+    text-align: center;
+    line-height: 1.5;
+}
+
+.separator {
+    width: 100%;
+    height: 2px;
+    background: #ccc;
+    margin: 10px 0;
+}
+
+#buttons-wrapper {
+    display: flex;
+    gap: 20px;
+}
+
+button {
+    border: none;
+    border-radius: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#yesBtn {
+    padding: 14px 30px;
+    font-size: 16px;
+    background: #008000;
+    color: white;
+}
+
+#noBtn {
+    padding: 14px 30px;
+    font-size: 16px;
+    background: #808080;
+    color: white;
+}
+
+/* data w jednej linii */
+.nowrap {
+    white-space: nowrap;
+    display: block;
+}
+
+#playground {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+}
+
+#noBtn.runaway {
+    position: absolute;
+    pointer-events: auto;
+}
+
+img {
+    max-width: 250px;
+    border-radius: 15px;
+    margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<div id="wrapper">
+    <div id="header">⚠️ Powiadomienie ⚠️</div>
+
+    <div id="container">
+        <h1>
+            <strong>Upływa termin ważności subskrypcji na związek </strong>
+            z użytkownikiem
+            <strong> Brygida.</strong>
+        </h1>
+
+        <div class="separator"></div>
+
+        <h1>
+            Czy chcesz odnowić subskrypcję na następny rok?
+        </h1>
+
+        <h1>
+            <strong>💔⏳Subskrypcja wygaśnie</strong>
+            <span class="nowrap"><strong>15 kwietnia 2026</strong></span>
+        </h1>
+
+        <div id="buttons-wrapper">
+            <button id="yesBtn">✔️ Tak, odnawiam</button>
+            <button id="noBtn">❌ Nie, rezygnuję</button>
+        </div>
+    </div>
+</div>
+ 
+<div id="playground"></div>
+
+<script>
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const container = document.getElementById("container");
+const playground = document.getElementById("playground");
+
+let runaway = false;
+let size = 16;
+
+function growYes() {
+    size += 4;
+    yesBtn.style.fontSize = size + "px";
+}
+
+function moveNo() {
+    const maxX = playground.clientWidth - noBtn.offsetWidth;
+    const maxY = playground.clientHeight - noBtn.offsetHeight;
+
+    noBtn.style.left = Math.random() * maxX + "px";
+    noBtn.style.top = Math.random() * maxY + "px";
+}
+
+yesBtn.onclick = () => {
+    // usuń przycisk "Nie" jeśli istnieje
+    if (noBtn) {
+        noBtn.remove();
+    }
+
+    container.innerHTML = `
+        <h1 style="font-size: 28px;">Wiedziałam, że powiesz tak 🥰</h1>
+        <img src="src/pies.jpg">
+    `;
+};
+
+noBtn.onclick = (e) => {
+    e.stopPropagation();
+    growYes();
+
+    if (!runaway) {
+        runaway = true;
+        playground.appendChild(noBtn);
+        noBtn.classList.add("runaway");
+    }
+
+    moveNo();
+};
+</script>
+
+</body>
+</html>
+
